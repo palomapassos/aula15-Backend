@@ -18,11 +18,10 @@ const rl = readline.createInterface({
 /**
  * Escreva seu código aqui embaixo;
  */
-
- console.log("Olá, minhas queridas e queridos! \n Sentiram saudades? \n Esse é o nosso cardápio de hoje para vocês: \n* Fatia de torta \n* Bolo de pote \n* Donuts\n* Docinhos \nPode nos falar seu desejo que atendemos com pronta-entrega. ;) \n");
-
  const chalk = require('chalk');
  const emoji = require('node-emoji');
+ console.log(`Olá, minhas queridas e queridos! \n Sentiram saudades? ${emoji.get('heart')}\n Esse é o nosso cardápio de hoje para vocês: \n* Fatia de torta \n* Bolo de pote \n* Donuts\n* Docinhos \nPode nos falar seu desejo que atendemos com pronta-entrega. ${emoji.get('sunny')} \n`);
+
 
  let totalAPagar = 0;
 
@@ -52,6 +51,7 @@ const rl = readline.createInterface({
      },
 ];
 
+//iniciando o pedido
 
 function procurandoPedido(){
     rl.question('O que você deseja? \n', (resposta) => {
@@ -69,6 +69,8 @@ function procurandoPedido(){
     });
 }
 
+// conferindo se o produto está disponível
+
 function achouOuNao(produtoEncontrado, pedido, posicao_Produto){
     const resposta = pedido;
     const posicao = posicao_Produto;
@@ -85,11 +87,13 @@ function achouOuNao(produtoEncontrado, pedido, posicao_Produto){
         })
     }else{
         console.log(chalk.red(`Yay! Temos seu produto ${pedido}`));
-        rl.question("Quantos você deseja? \n", (qtd) => {
+        rl.question("Quantos(as) você deseja? \n", (qtd) => {
             qtdSolicitada(resposta, qtd, posicao);  
         })      
     }
 }
+
+//Calculando quantidade e inserindo na sacola
 
 function qtdSolicitada(resposta, qtd, posicao){
     const nomeDoProdutoPedido = resposta;
@@ -107,12 +111,11 @@ function qtdSolicitada(resposta, qtd, posicao){
                     quantidade: qntPedida
                     }
                 ); 
-            totalAPagar = calcularValor(qntPedida, preco_und);
-            console.log(chalk.green(`Belezinha! O total é: R$ ${totalAPagar.toFixed(2)}.`));
-            console. log(`Essa é a sua sacola:\n ${sacoladeCompras}`);
+            totalAPagar += calcularValor(qntPedida, preco_und); //somando com valores anteriores para montar o total a pagar
+            console.log(chalk.green(`Belezinha! O total é: R$ ${totalAPagar.toFixed(2)}.`)); 
             maisProdutos();
           }else{
-              console.log("Tudo bem. Obrigada por procurar nossos produtos. Te vejo na próxima! ;)")
+              console.log(`Tudo bem. Obrigada por procurar nossos produtos. Te vejo na próxima! ${emoji.get('heart')}`);
                 rl.close();  
           }
         })
@@ -121,11 +124,13 @@ function qtdSolicitada(resposta, qtd, posicao){
             nomeDoProduto: nomeDoProdutoPedido,
             quantidade: qntPedida
         }); 
-        totalAPagar += calcularValor(qntPedida, preco_und);
+        totalAPagar += calcularValor(qntPedida, preco_und); //somando com valores anteriores para montar o total a pagar
         console.log(chalk.green(`Belezinha! O total é: R$ ${totalAPagar.toFixed(2)}.`));
         maisProdutos();
     }
 };
+
+// Calculando o valor a pagar por cada produto adicionado
 
 function calcularValor(qntPedida, preco_und){
    let qnt = qntPedida;
@@ -135,9 +140,10 @@ function calcularValor(qntPedida, preco_und){
    return total;
 }
 
+// Conferindo se a pessoa deseja acrescentar mais produtos a sacola
 
 function maisProdutos(){
-    rl.question("Deseja acrescentar mais produtos ao carrinho?\n 1 - Sim\n 2 - Não\n", (opcao) =>{
+    rl.question("Deseja acrescentar mais produtos a sacola?\n 1 - Sim\n 2 - Não\n", (opcao) =>{
         if(opcao === "1"){
             procurandoPedido();
         }else{
@@ -145,6 +151,8 @@ function maisProdutos(){
         }
     })
 }
+
+// Conferindo se a pessoa deseja listar os produtos da sacola
 
 function listarSacola(){
     rl.question("Você deseja listar a sua sacola de compras?\n 1 - Sim\n 2 - Não\n", (opcao) => {
@@ -158,13 +166,15 @@ function listarSacola(){
     })
 }
 
+// Conferindo se a pessoa deseja finalizar a compra e enviando uma mensagem final
+
 function finalizarCompra(){
     rl.question("Deseja finalizar a compra?\n 1- Sim\n 2- Não\n", (opcao) => {
         if(opcao === "1"){
-            console.log(chalk.yellow("Yeeew! Sua compra foi finalizada! Obrigada pela preferência! ;) \nVolta sempre tá? Estaremos sempre aqui para você!\n"));
+            console.log(chalk.yellow(`Yeeew! Sua compra foi finalizada! Obrigada pela preferência! ${emoji.get('heart')} \nVolta sempre tá? Estaremos aqui para você!\n`));
             rl.close();
         }else{
-            console.log("Tudo bem. Obrigada por procurar nossos produtos. Te vejo na próxima! ;)")
+            console.log(`Tudo bem. Obrigada por procurar nossos produtos. Te vejo na próxima! ${emoji.get('heart')}`)
             rl.close();  
         }
     })
